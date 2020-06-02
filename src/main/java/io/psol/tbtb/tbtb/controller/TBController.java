@@ -30,6 +30,7 @@ public class TBController implements Runnable {
                     str = in.readLine();
                     if (str != null){
                         str2 = str;
+                        System.out.println("test : "+str2);
                     }
                     System.out.println("Android S: Received: '" + str + "'");
 
