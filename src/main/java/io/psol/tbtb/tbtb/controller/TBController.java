@@ -44,18 +44,18 @@ public class TBController implements Runnable {
                 Socket iosSocket = iosServerSocket.accept();
                 System.out.println("iOS S: Receiving...");
                 try {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(androidSocket.getInputStream()));
+                    BufferedReader in = new BufferedReader(new InputStreamReader(iosSocket.getInputStream()));
                     str = in.readLine();
 
                     System.out.println("iOS S: Received: '" + str + "'");
 
-                    PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(androidSocket.getOutputStream())), true);
+                    PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(iosSocket.getOutputStream())), true);
                     out.println("iOS Server Received " + str);
                 } catch (Exception e) {
                     System.out.println("iOS S: Error");
                     e.printStackTrace();
                 } finally {
-                    androidSocket.close();
+                    iosSocket.close();
                     System.out.println("iOS S: Done.");
                 }
             }
@@ -67,6 +67,7 @@ public class TBController implements Runnable {
 
     @RequestMapping("/home")
     public String home() {
+        System.out.println("str : " + str);
         return str;
     }
 }
