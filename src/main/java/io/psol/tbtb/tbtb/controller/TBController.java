@@ -12,7 +12,7 @@ import java.net.Socket;
 public class TBController implements Runnable {
     public static final int androidServerPort = 5555;
     public static final int iosServerPort = 6666;
-    String str;
+    String str, str2;
 
     @Override
     public void run() {
@@ -45,12 +45,12 @@ public class TBController implements Runnable {
                 System.out.println("iOS S: Receiving...");
                 try {
                     BufferedReader in = new BufferedReader(new InputStreamReader(iosSocket.getInputStream()));
-                    str = in.readLine();
+                    str2 = in.readLine();
 
-                    System.out.println("iOS S: Received: '" + str + "'");
+                    System.out.println("iOS S: Received: '" + str2 + "'");
 
                     PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(iosSocket.getOutputStream())), true);
-                    out.println("iOS Server Received " + str);
+                    out.println("iOS Server Received " + str2);
                 } catch (Exception e) {
                     System.out.println("iOS S: Error");
                     e.printStackTrace();
@@ -67,7 +67,7 @@ public class TBController implements Runnable {
 
     @RequestMapping("/home")
     public String home() {
-        System.out.println("str : " + str);
+        System.out.println("str : " + str + "\nstr2 : " + str2);
         return str;
     }
 }
