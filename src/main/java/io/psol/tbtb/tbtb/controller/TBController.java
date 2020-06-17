@@ -11,7 +11,7 @@ public class TBController {
         System.out.println("\n/android Requested URL : \n" + url);
 
         // AI api 처리된 데이터
-        String TTS = url;
+        String TTS = "가공가공>_<";
         return TTS;
     }
 }
