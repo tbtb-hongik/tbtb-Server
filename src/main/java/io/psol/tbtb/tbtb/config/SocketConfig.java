@@ -15,7 +15,7 @@ public class SocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
-        webSocketHandlerRegistry.addHandler(socketHandler, "/ws/Android").setAllowedOrigins("*");
-        webSocketHandlerRegistry.addHandler(socketHandler, "/ws/iOS").setAllowedOrigins("*");
+        webSocketHandlerRegistry.addHandler(socketHandler, "/ws/Android").setAllowedOrigins("*").withSockJS();
+        //webSocketHandlerRegistry.addHandler(socketHandler, "/ws/iOS").setAllowedOrigins("*");
     }
 }
