@@ -9,8 +9,8 @@ public class TbtbApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TbtbApplication.class, args);
-        Thread thread = new Thread(new TBController());
-        thread.start();
+        //Thread thread = new Thread(new TBController());
+        //thread.start();
     }
 
 }

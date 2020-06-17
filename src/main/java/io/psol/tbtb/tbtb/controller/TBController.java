@@ -25,13 +25,11 @@ public class TBController implements Runnable {
             while (true) {
                 Socket androidSocket = androidServerSocket.accept();
                 System.out.println("Android S: Receiving...");
+                Socket iosSocket = iosServerSocket.accept();
+                System.out.println("iOS S: Receiving...");
                 try {
                     BufferedReader in = new BufferedReader(new InputStreamReader(androidSocket.getInputStream()));
                     str = in.readLine();
-                    if (str != null){
-                        str2 = str;
-                        System.out.println("test : "+str2);
-                    }
                     System.out.println("Android S: Received: '" + str + "'");
 
                     PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(androidSocket.getOutputStream())), true);
@@ -44,11 +42,9 @@ public class TBController implements Runnable {
                     System.out.println("Android S: Done.");
                 }
 
-                Socket iosSocket = iosServerSocket.accept();
-                System.out.println("iOS S: Receiving...");
                 try {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(iosSocket.getInputStream()));
-                    str = in.readLine();
+                    BufferedReader in2 = new BufferedReader(new InputStreamReader(iosSocket.getInputStream()));
+                    str = in2.readLine();
 
                     System.out.println("iOS S: Received: '" + str + "'");
 
