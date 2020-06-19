@@ -12,7 +12,7 @@ public class TBServiceImpl implements TBService {
     private TBDao dao;
 
     @Override
-    public void create(TBModel tbModel) {
+    public void insert(TBModel tbModel) {
         dao.insert(tbModel);
     }
 }
