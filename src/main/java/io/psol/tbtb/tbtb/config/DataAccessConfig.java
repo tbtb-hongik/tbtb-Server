@@ -11,7 +11,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = "io.psol.tbtb.tbtb.TBDao")
+@MapperScan(basePackages = "io.psol.tbtb.tbtb.DAO")
 public class DataAccessConfig {
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
