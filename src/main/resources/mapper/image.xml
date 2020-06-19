@@ -14,4 +14,7 @@ public class TBModel {
     <insert id="insert" parameterType="io.psol.tbtb.tbtb.model.TBModel">
         insert into image(`os`, `url`, `result`) values(#{os}, #{url}, #{result})
     </insert>
+    <select id="selectAll" resultType="io.psol.tbtb.tbtb.model.TBModel">
+		select * from image
+	</select>
 </mapper>
