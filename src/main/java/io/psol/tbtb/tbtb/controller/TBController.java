@@ -1,4 +1,4 @@
-package io.psol.tbtb.tbtb.controller;
+ package io.psol.tbtb.tbtb.controller;
 
 import io.psol.tbtb.tbtb.model.TBModel;
 import io.psol.tbtb.tbtb.service.TBService;
@@ -12,8 +12,25 @@ public class TBController {
     TBService tbService;
 
     @RequestMapping(value = "/android", method = RequestMethod.POST)
-    public @ResponseBody
-    String test(@RequestParam("url") String url, @RequestParam("os") String os) {
+    public @ResponseBody String test(@RequestParam("url") String url, @RequestParam("os") String os) {
+        // url 은 받은 데이터
+        System.out.println(os + " URL : \n" + url);
+
+        // AI api 처리된 데이터
+        String TTS = "베이지색 운동화";
+
+        // DB 저장
+        TBModel image = new TBModel();
+        image.setOs(os);
+        image.setUrl(url);
+        image.setResult(TTS);
+        tbService.insert(image);
+
+        return TTS;
+    }
+
+    @RequestMapping(value = "/ios", method = RequestMethod.POST)
+    public @ResponseBody String iOS(@RequestParam("url") String url, @RequestParam("os") String os) {
         // url 은 받은 데이터
         System.out.println(os + " URL : \n" + url);
 
