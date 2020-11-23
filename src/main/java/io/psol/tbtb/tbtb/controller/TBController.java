@@ -31,7 +31,7 @@ public class TBController {
 
         try {
 
-            String imageFilePath = ""; //여기 설정해줘야함(test이미지 경로)
+            String imageFilePath = url; //여기 설정해줘야함(test이미지 경로)
 
             List<AnnotateImageRequest> requests = new ArrayList<>();
 
