@@ -1,18 +1,13 @@
  package io.psol.tbtb.tbtb.controller;
 
+import com.google.cloud.vision.v1.*;
 import io.psol.tbtb.tbtb.model.TBModel;
 import io.psol.tbtb.tbtb.service.TBService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.google.cloud.vision.v1.ImageAnnotatorClient;
-import com.google.cloud.vision.v1.AnnotateImageRequest;
-import com.google.cloud.vision.v1.AnnotateImageResponse;
-import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
-import com.google.cloud.vision.v1.Feature;
 import com.google.cloud.vision.v1.Feature.Type;
-import com.google.cloud.vision.v1.Image;
 import com.google.protobuf.ByteString;
 
 import java.io.FileInputStream;
@@ -31,13 +26,14 @@ public class TBController {
 
         try {
 
-            String imageFilePath = url; //여기 설정해줘야함(test이미지 경로)
+            String imageFilePath = "gs://" + url; //여기 설정해줘야함(test이미지 경로)
 
             List<AnnotateImageRequest> requests = new ArrayList<>();
 
-            ByteString imgBytes = ByteString.readFrom(new FileInputStream(imageFilePath));
+//            ByteString imgBytes = ByteString.readFrom(new FileInputStream(imageFilePath));
+            ImageSource imgUri = ImageSource.newBuilder().setImageUri(url).build();
+            Image img = Image.newBuilder().setSource(imgUri).build();
 
-            Image img = Image.newBuilder().setContent(imgBytes).build();
             Feature feat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
             AnnotateImageRequest request = AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
             requests.add(request);
