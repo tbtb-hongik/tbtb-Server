@@ -38,7 +38,7 @@ public class TBController {
             ByteString imgBytes = ByteString.readFrom(new FileInputStream(imageFilePath));
 
             Image img = Image.newBuilder().setContent(imgBytes).build();
-            Feature feat = Feature.newBuilder().setType(Type.TEXT_DETECTION).build();
+            Feature feat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
             AnnotateImageRequest request = AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
             requests.add(request);
 
@@ -66,16 +66,15 @@ public class TBController {
             e.printStackTrace();
         }
 
-
         // AI api 처리된 데이터
         String TTS = "안녕하세요! 스니커즈빌딩입니다. 스니커즈빌딩은 2020년 3월 개업한 소규모 슈즈 전문 스토어 입니다. 판매하는 모든 제품은 100% 정품임을 약속드리며 좋은 물건 합리적인 가격에 제공해드리는 스니커즈빌딩이 되도록 노력하겠습니다. 감사합니다.";
 
         // DB 저장
-//        TBModel image = new TBModel();
-//        image.setOs(os);
-//        image.setUrl(url);
-//        image.setResult(TTS);
-//        tbService.insert(image);
+        TBModel image = new TBModel();
+        image.setOs(os);
+        image.setUrl(url);
+        image.setResult(TTS);
+        tbService.insert(image);
 
         return TTS;
     }
