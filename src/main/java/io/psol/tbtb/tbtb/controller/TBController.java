@@ -37,6 +37,9 @@ public class TBController {
             try (ImageAnnotatorClient client = ImageAnnotatorClient.create()) {
                 BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
                 List<AnnotateImageResponse> responses = response.getResponsesList();
+                System.out.printf("test: %s\n", requests);
+                System.out.printf("test: %s\n", response);
+                System.out.printf("test: %s\n", responses);
 
                 for (AnnotateImageResponse res : responses) {
                     if (res.hasError()) {
