@@ -25,12 +25,8 @@ public class TBController {
         System.out.println(os + " URL : \n" + url);
 
         try {
-
-            String imageFilePath = "gs://" + url; //여기 설정해줘야함(test이미지 경로)
-
             List<AnnotateImageRequest> requests = new ArrayList<>();
 
-//            ByteString imgBytes = ByteString.readFrom(new FileInputStream(imageFilePath));
             ImageSource imgUri = ImageSource.newBuilder().setImageUri(url).build();
             Image img = Image.newBuilder().setSource(imgUri).build();
 
