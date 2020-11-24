@@ -72,7 +72,7 @@ public class TBController {
             System.out.println("Text : ");
             System.out.printf("requests: %s\n", requests);
 //            System.out.printf("response: %s\n", response);
-//            System.out.printf("responses: %s\n", responses);
+////            System.out.printf("responses: %s\n", responses);
 
             for (AnnotateImageResponse res : responses) {
                 if (res.hasError()) {
@@ -86,8 +86,15 @@ public class TBController {
                     System.out.println("##getDescription() : " + annotation.getDescription());
                     System.out.println("##getLocale() : " + annotation.getLocale());
                     System.out.println("##getMid() : " + annotation.getMid());
-                    System.out.println("##getXY : " + annotation.getBoundingPoly().getVerticesList());
+                    System.out.println("##getXY : " + annotation.getBoundingPoly());
+                    for (Vertex vertex : annotation.getBoundingPoly().getVerticesList()) {
+                        System.out.println("~~getX : " + vertex.getX());
+                        System.out.println("~~getY : " + vertex.getY());
+                    }
                     System.out.println("##toString() : " + annotation.toString());
+
+
+
                 }
 
                 // For full list of available annotations, see http://g.co/cloud/vision/docs
