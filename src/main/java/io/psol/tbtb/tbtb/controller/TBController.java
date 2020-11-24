@@ -81,10 +81,10 @@ public class TBController {
                 List<EntityAnnotation> annotations = res.getLabelAnnotationsList();
                 System.out.println("for문 : ");
                 for (EntityAnnotation annotation : annotations){
-                    System.out.println(annotation.getDescription());
-                    System.out.println(annotation.getLocale());
-                    System.out.println(annotation.getMid());
-                    System.out.println(annotation.toString());
+                    System.out.println("##getDescription() : " + annotation.getDescription());
+                    System.out.println("##getLocale() : " + annotation.getLocale());
+                    System.out.println("##getMid() : " + annotation.getMid());
+                    System.out.println("##toString() : " + annotation.toString());
                 }
 
                 // For full list of available annotations, see http://g.co/cloud/vision/docs
