@@ -86,6 +86,7 @@ public class TBController {
                     System.out.println("##getDescription() : " + annotation.getDescription());
                     System.out.println("##getLocale() : " + annotation.getLocale());
                     System.out.println("##getMid() : " + annotation.getMid());
+                    System.out.println("##getXY : " + annotation.getBoundingPoly());
                     System.out.println("##toString() : " + annotation.toString());
                 }
 
