@@ -20,43 +20,7 @@ public class TBController {
     public @ResponseBody String Android(@RequestParam("url") String url, @RequestParam("os") String os) {
         // url 은 받은 데이터
         System.out.println(os + " URL : \n" + url);
-
-//        try {
-//            ImageSource imgUri = ImageSource.newBuilder().setImageUri(url).build();
-//            Image img = Image.newBuilder().setSource(imgUri).build();
-//
-//            Feature feat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
-//            AnnotateImageRequest request = AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
-//
-//            List<AnnotateImageRequest> requests = new ArrayList<>();
-//            requests.add(request);
-//
-//            try (ImageAnnotatorClient client = ImageAnnotatorClient.create()) {
-//                BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
-//                List<AnnotateImageResponse> responses = response.getResponsesList();
-//                System.out.printf("test: %s\n", requests);
-//                System.out.printf("test: %s\n", response);
-//                System.out.printf("test: %s\n", responses);
-//
-//                for (AnnotateImageResponse res : responses) {
-//                    if (res.hasError()) {
-//                        System.out.printf("Error: %s\n", res.getError().getMessage());
-//                    }
-//
-//                    System.out.println("Text : ");
-//                    System.out.println(res.getTextAnnotationsList().get(0).getDescription());
-//
-//                    // For full list of available annotations, see http://g.co/cloud/vision/docs
-//			    	/*for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
-//
-//						//System.out.printf("Text: %s\n", annotation.getDescription());
-//						//System.out.printf("Position : %s\n", annotation.getBoundingPoly());
-//					}*/
-//                }
-//            }
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
+        analysisImage(url);
 
         // AI api 처리된 데이터
         String TTS = "안녕하세요! 스니커즈빌딩입니다. 스니커즈빌딩은 2020년 3월 개업한 소규모 슈즈 전문 스토어 입니다. 판매하는 모든 제품은 100% 정품임을 약속드리며 좋은 물건 합리적인 가격에 제공해드리는 스니커즈빌딩이 되도록 노력하겠습니다. 감사합니다.";
