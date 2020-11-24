@@ -88,10 +88,10 @@ public class TBController {
                     System.out.println("##getMid() : " + annotation.getMid());
                     System.out.println("##getXY : " + annotation.getBoundingPoly());
                     System.out.println(annotation.getBoundingPoly().getVerticesCount());
-                    for (int i = 0; i < annotation.getBoundingPoly().getVerticesCount(); i++) {
-                        System.out.println("~~getX : " + annotation.getBoundingPoly().getVertices(i).getX());
-                        System.out.println("~~getY : " + annotation.getBoundingPoly().getVertices(i).getY());
-                    }
+//                    for (int i = 0; i < annotation.getBoundingPoly().getVerticesCount(); i++) {
+//                        System.out.println("~~getX : " + annotation.getBoundingPoly().getVertices(i).getX());
+//                        System.out.println("~~getY : " + annotation.getBoundingPoly().getVertices(i).getY());
+//                    }
 //                    for (Vertex vertex : annotation.getBoundingPoly().getVerticesList()) {
 //                        System.out.println("~~getX : " + vertex.getX());
 //                        System.out.println("~~getY : " + vertex.getY());
