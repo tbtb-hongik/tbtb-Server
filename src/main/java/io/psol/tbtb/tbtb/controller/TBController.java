@@ -57,8 +57,10 @@ public class TBController {
         ImageSource imgUri = ImageSource.newBuilder().setImageUri(url).build();
         Image img = Image.newBuilder().setSource(imgUri).build();
 
-        Feature feat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
-        AnnotateImageRequest request = AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
+        Feature detectLabelFeat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
+        Feature detectTextFeat = Feature.newBuilder().setType(Feature.Type.DOCUMENT_TEXT_DETECTION).build();
+        Feature detectObject = Feature.newBuilder().setType(Feature.Type.OBJECT_LOCALIZATION).build();
+        AnnotateImageRequest request = AnnotateImageRequest.newBuilder().addFeatures(detectLabelFeat).addFeatures(detectTextFeat).addFeatures(detectObject).setImage(img).build();
 
         List<AnnotateImageRequest> requests = new ArrayList<>();
         requests.add(request);
@@ -78,14 +80,14 @@ public class TBController {
                     return;
                 }
 
-                List<EntityAnnotation> annotations = res.getLabelAnnotationsList();
-                System.out.println("for문 : ");
-                for (EntityAnnotation annotation : annotations){
-                    System.out.println("##getDescription() : " + annotation.getDescription());
-                    System.out.println("##getLocale() : " + annotation.getLocale());
-                    System.out.println("##getMid() : " + annotation.getMid());
-                    System.out.println("##toString() : " + annotation.toString());
-                }
+//                List<EntityAnnotation> annotations = res.getLabelAnnotationsList();
+//                System.out.println("for문 : ");
+//                for (EntityAnnotation annotation : annotations){
+//                    System.out.println("##getDescription() : " + annotation.getDescription());
+//                    System.out.println("##getLocale() : " + annotation.getLocale());
+//                    System.out.println("##getMid() : " + annotation.getMid());
+//                    System.out.println("##toString() : " + annotation.toString());
+//                }
 
                 // For full list of available annotations, see http://g.co/cloud/vision/docs
 			    	/*for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
