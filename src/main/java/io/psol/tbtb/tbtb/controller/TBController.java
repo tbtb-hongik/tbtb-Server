@@ -97,8 +97,8 @@ public class TBController {
             Pair X = list.get(i);
             Pair Y = list.get(i+1);
 
-            a += X.x*Y.y;
-            b += X.y*Y.x;
+            a += X.xInt*Y.yInt;
+            b += X.yInt*Y.xInt;
         }
         return Math.abs(a-b);
     }
@@ -125,11 +125,11 @@ public class TBController {
             IdxAreaInfo.add(new Pair(boxArea, i));
         }
         //내림차순 정렬
-        Collections.sort(IdxAreaInfo, new Ascending());
+        Collections.sort(IdxAreaInfo, new DescendingInt());
         //인덱스 최대 5순위 까지 저장
         ArrayList<Integer> IdxInfoList = new ArrayList<Integer>();
         for (int count = 0; count < 5 && count < IdxAreaInfo.size(); count++){
-            IdxInfoList.add(IdxAreaInfo.get(count).y);
+            IdxInfoList.add(IdxAreaInfo.get(count).yInt);
         }
 
         if (IdxInfoList.size() == 0){
@@ -152,22 +152,45 @@ public class TBController {
 //        return
 //    }
 
+
+     public ArrayList<String> getObjectName(List<LocalizedObjectAnnotation> annotations){
+        HashMap<String, Boolean> checkObjNameMap = new HashMap<>();
+        ArrayList<String> infoList = new ArrayList<>();
+        for (int i = 0; i < annotations.size(); i++){
+            String name = annotations.get(i).getName();
+            if (checkObjNameMap.containsKey(name)){
+                //이름이 이미 있을 때
+                //do nothing
+            }
+            else{
+                //이름이 없을 때
+                checkObjNameMap.put(name, true);
+                infoList.add(name);
+            }
+        }
+        ArrayList<String> retInfoList = new ArrayList<>();
+         for (int count = 0; count < 5 && count < retInfoList.size(); count++){
+             retInfoList.add(retInfoList.get(count));
+         }
+        return retInfoList;
+     }
+
+
 }
 
 class Pair{
-     int x;
-     int y;
+     int xInt, yInt;
 
      public Pair(int x, int y){
-         this.x = x;
-         this.y = y;
+         this.xInt = x;
+         this.yInt = y;
      }
 }
 
 
-class Ascending implements Comparator<Pair>{
+class DescendingInt implements Comparator<Pair>{
      public int compare(Pair a, Pair b)
      {
-         return b.x - a.x;
+         return b.xInt - a.xInt;
      }
  }
