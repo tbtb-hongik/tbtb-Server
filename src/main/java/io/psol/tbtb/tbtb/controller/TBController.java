@@ -82,6 +82,8 @@ public class TBController {
                 
                 System.out.printf("test : %s\n", res.getFullTextAnnotation().getText());
                 System.out.printf("test2 : %s\n ", res.getLabelAnnotationsList());
+                System.out.printf("test2 : %s\n ", res.getLocalizedObjectAnnotationsList());
+
             }
         } catch(Exception e) {
             e.printStackTrace();
