@@ -2,16 +2,17 @@
 
 import io.psol.tbtb.tbtb.model.TBModel;
 import io.psol.tbtb.tbtb.service.TBService;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.google.cloud.vision.v1.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-@Controller
+
+ @Controller
 public class TBController {
     @Autowired
     TBService tbService;
@@ -79,38 +80,81 @@ public class TBController {
                     System.out.printf("Error: %s\n", res.getError().getMessage());
                     return;
                 }
-
                 List<EntityAnnotation> annotations = res.getTextAnnotationsList();
-                System.out.println("for문 : ");
-                for (EntityAnnotation annotation : annotations){
-                    System.out.println("##getDescription() : " + annotation.getDescription());
-                    System.out.println("##getLocale() : " + annotation.getLocale());
-                    System.out.println("##getMid() : " + annotation.getMid());
-                    System.out.println("##getXY : " + annotation.getBoundingPoly());
-                    System.out.println(annotation.getBoundingPoly().getVerticesCount());
-//                    for (int i = 0; i < annotation.getBoundingPoly().getVerticesCount(); i++) {
-//                        System.out.println("~~getX : " + annotation.getBoundingPoly().getVertices(i).getX());
-//                        System.out.println("~~getY : " + annotation.getBoundingPoly().getVertices(i).getY());
-//                    }
-//                    for (Vertex vertex : annotation.getBoundingPoly().getVerticesList()) {
-//                        System.out.println("~~getX : " + vertex.getX());
-//                        System.out.println("~~getY : " + vertex.getY());
-//                    }
-                    System.out.println("##toString() : " + annotation.toString());
-
-
-
+                ArrayList<Pair> IdxAreaInfo = new ArrayList<Pair>();
+                //getDescription() - label(text)
+                //getLocale()
+                //getMid()
+                //getBoundingPoly()
+                //좌표 : annotation.getBoundingPoly().getVertices(i).getX()
+                ArrayList<Pair> getPairList = new ArrayList<Pair>();
+                for (int i = 0; i < annotations.size(); i++){
+                    //현재 annotations 원소의 크기
+                    int annotaionSize = annotations.get(i).getBoundingPoly().getVerticesCount();
+                    //리스트 초기화
+                    getPairList.clear();
+                    //ccw 넓이 구하기, 총 4개의 원소에서 3개만 필요
+                    for (int j = 0; j < annotaionSize - 1; j++) {
+                        int nowX = annotations.get(i).getBoundingPoly().getVertices(j).getX();
+                        int nowY = annotations.get(i).getBoundingPoly().getVertices(j).getY();
+                        getPairList.add(new Pair(nowX, nowY));
+                    }
+                    //ccw 첫번째 원소 재추가
+                    getPairList.add(getPairList.get(0));
+                    //(넓이, 인덱스) 순으로 IdxAreaInfo 리스트에 삽입
+                    int boxArea = getArea(getPairList);
+                    IdxAreaInfo.add(new Pair(boxArea, i));
+                }
+                //내림차순 정렬
+                Collections.sort(IdxAreaInfo, new Ascending());
+                //인덱스 최대 5순위 까지 저장
+                ArrayList IdxInfoList = new ArrayList();
+                for (int count = 0; count < 5 && count < IdxAreaInfo.size(); count ++){
+                    IdxInfoList.add(IdxAreaInfo.get(count).y);
                 }
 
-                // For full list of available annotations, see http://g.co/cloud/vision/docs
-			    	/*for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
+                //IdxInfoList의 크기가 0일 때
+                //IdxInfoList의 크기가 0이 아닐 때
 
-						//System.out.printf("Text: %s\n", annotation.getDescription());
-						//System.out.printf("Position : %s\n", annotation.getBoundingPoly());
-					}*/
+
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
+
+    public int getArea(ArrayList<Pair> list){
+        int a = 0;
+        int b = 0;
+        for(int i=0; i<list.size()-1; i++) {
+            Pair X = list.get(i);
+            Pair Y = list.get(i+1);
+
+            a += X.x*Y.y;
+            b += X.y*Y.x;
+        }
+        return Math.abs(a-b);
+    }
+
+
 }
+
+
+
+class Pair{
+     int x;
+     int y;
+
+     public Pair(int x, int y){
+         this.x = x;
+         this.y = y;
+     }
+}
+
+
+class Ascending implements Comparator<Pair>{
+     public int compare(Pair a, Pair b)
+     {
+         return a.x - b.x;
+     }
+ }
