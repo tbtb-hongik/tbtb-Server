@@ -108,8 +108,8 @@ public class TBController {
                 //내림차순 정렬
                 Collections.sort(IdxAreaInfo, new Ascending());
                 //인덱스 최대 5순위 까지 저장
-                ArrayList IdxInfoList = new ArrayList();
-                for (int count = 0; count < 5 && count < IdxAreaInfo.size(); count ++){
+                ArrayList<Integer> IdxInfoList = new ArrayList<Integer>();
+                for (int count = 0; count < 5 && count < IdxAreaInfo.size(); count++){
                     IdxInfoList.add(IdxAreaInfo.get(count).y);
                 }
 
@@ -121,6 +121,8 @@ public class TBController {
                 else{
                     for (int i =0; i < IdxInfoList.size(); i++){
                         System.out.println(IdxInfoList.get(i));
+                        int tmpIdx = IdxInfoList.get(i);
+                        System.out.println(annotations.get(tmpIdx).getDescription());
                     }
                 }
 
