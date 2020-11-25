@@ -80,8 +80,8 @@ public class TBController {
                 //Label
 //                ArrayList<Integer> LabelInfoList = getLabel(res.getLabelAnnotationsList());
                 
-                System.out.println(res.getFullTextAnnotation().getText());
-
+                System.out.printf("test : %s\n", res.getFullTextAnnotation().getText());
+                System.out.printf("test2 : %s\n ", res.getLabelAnnotationsList());
             }
         } catch(Exception e) {
             e.printStackTrace();
