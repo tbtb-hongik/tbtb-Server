@@ -75,15 +75,22 @@ public class TBController {
                     System.out.printf("Error: %s\n", res.getError().getMessage());
                     return;
                 }
+                //Object
+                ArrayList<String> ObjInfoList = getObjectName(res.getLocalizedObjectAnnotationsList());
+                //Label
+                ArrayList<String> LabelInfoList = getLabel(res.getLabelAnnotationsList());
                 //Text annotation
                 ArrayList<Integer> TextInfoList = getText(res.getTextAnnotationsList());
-                //Label
-//                ArrayList<Integer> LabelInfoList = getLabel(res.getLabelAnnotationsList());
                 
-                System.out.printf("test : %s\n", res.getFullTextAnnotation().getText());
-                System.out.printf("test2 : %s\n ", res.getLabelAnnotationsList());
-                System.out.printf("test2 : %s\n ", res.getLocalizedObjectAnnotationsList());
+//                System.out.printf("test : %s\n", res.getFullTextAnnotation().getText());
+//                System.out.printf("test2 : %s\n ", res.getLabelAnnotationsList());
 
+                System.out.printf("test Object : %s\n ", ObjInfoList);
+                System.out.printf("test Label : %s\n", LabelInfoList);
+                if (LabelInfoList.contains("Text") || LabelInfoList.contains("Font")) {
+                    // Text annotation 활용
+                    System.out.printf("test Text: %s\n", res.getFullTextAnnotation().getText());
+                }
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -147,10 +154,15 @@ public class TBController {
         return IdxInfoList;
     }
 
-//    public ArrayList<Integer> getLabel(List<EntityAnnotation> annotations){
-//
-//        return
-//    }
+     public ArrayList<String> getLabel(List<EntityAnnotation> annotations){
+         ArrayList<String> getDescriptionList = new ArrayList<String>();
+
+         for (int i = 0; i < 5 && i < annotations.size(); i++) {
+             getDescriptionList.add(annotations.get(i).getDescription());
+         }
+
+         return getDescriptionList;
+     }
 
 
      public ArrayList<String> getObjectName(List<LocalizedObjectAnnotation> annotations){
