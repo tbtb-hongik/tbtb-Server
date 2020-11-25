@@ -148,8 +148,6 @@ public class TBController {
 
 }
 
-
-
 class Pair{
      int x;
      int y;
@@ -164,6 +162,6 @@ class Pair{
 class Ascending implements Comparator<Pair>{
      public int compare(Pair a, Pair b)
      {
-         return a.x - b.x;
+         return b.x - a.x;
      }
  }
