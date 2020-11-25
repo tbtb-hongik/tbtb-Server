@@ -70,61 +70,17 @@ public class TBController {
             BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
             List<AnnotateImageResponse> responses = response.getResponsesList();
 
-            System.out.println("Text : ");
-            System.out.printf("requests: %s\n", requests);
-//            System.out.printf("response: %s\n", response);
-////            System.out.printf("responses: %s\n", responses);
-
             for (AnnotateImageResponse res : responses) {
                 if (res.hasError()) {
                     System.out.printf("Error: %s\n", res.getError().getMessage());
                     return;
                 }
-                List<EntityAnnotation> annotations = res.getTextAnnotationsList();
-                ArrayList<Pair> IdxAreaInfo = new ArrayList<Pair>();
-                //getDescription() - label(text)
-                //getLocale()
-                //getMid()
-                //getBoundingPoly()
-                //좌표 : annotation.getBoundingPoly().getVertices(i).getX()
-                ArrayList<Pair> getPairList = new ArrayList<Pair>();
-                for (int i = 0; i < annotations.size(); i++){
-                    //현재 annotations 원소의 크기
-                    int annotaionSize = annotations.get(i).getBoundingPoly().getVerticesCount();
-                    //리스트 초기화
-                    getPairList.clear();
-                    //ccw 넓이 구하기, 총 4개의 원소에서 3개만 필요
-                    for (int j = 0; j < annotaionSize - 1; j++) {
-                        int nowX = annotations.get(i).getBoundingPoly().getVertices(j).getX();
-                        int nowY = annotations.get(i).getBoundingPoly().getVertices(j).getY();
-                        getPairList.add(new Pair(nowX, nowY));
-                    }
-                    //ccw 첫번째 원소 재추가
-                    getPairList.add(getPairList.get(0));
-                    //(넓이, 인덱스) 순으로 IdxAreaInfo 리스트에 삽입
-                    int boxArea = getArea(getPairList);
-                    IdxAreaInfo.add(new Pair(boxArea, i));
-                }
-                //내림차순 정렬
-                Collections.sort(IdxAreaInfo, new Ascending());
-                //인덱스 최대 5순위 까지 저장
-                ArrayList<Integer> IdxInfoList = new ArrayList<Integer>();
-                for (int count = 0; count < 5 && count < IdxAreaInfo.size(); count++){
-                    IdxInfoList.add(IdxAreaInfo.get(count).y);
-                }
-
-                //IdxInfoList의 크기가 0일 때
-                //IdxInfoList의 크기가 0이 아닐 때
-                if (IdxInfoList.size() == 0){
-                    System.out.println("Size 0");
-                }
-                else{
-                    for (int i =0; i < IdxInfoList.size(); i++){
-                        System.out.println(IdxInfoList.get(i));
-                        int tmpIdx = IdxInfoList.get(i);
-                        System.out.println(annotations.get(tmpIdx).getDescription());
-                    }
-                }
+                //Text annotation
+                ArrayList<Integer> TextInfoList = getText(res.getTextAnnotationsList());
+                //Label
+//                ArrayList<Integer> LabelInfoList = getLabel(res.getLabelAnnotationsList());
+                
+                System.out.println(res.getFullTextAnnotation().getText());
 
             }
         } catch(Exception e) {
@@ -145,6 +101,54 @@ public class TBController {
         return Math.abs(a-b);
     }
 
+    public ArrayList<Integer> getText(List<EntityAnnotation> annotations){
+        ArrayList<Pair> IdxAreaInfo = new ArrayList<Pair>();
+        ArrayList<Pair> getPairList = new ArrayList<Pair>();
+        for (int i = 0; i < annotations.size(); i++){
+            //현재 annotations 원소의 크기
+            int annotaionSize = annotations.get(i).getBoundingPoly().getVerticesCount();
+
+            //리스트 초기화
+            getPairList.clear();
+            //ccw 넓이 구하기, 총 4개의 원소에서 3개만 필요
+            for (int j = 0; j < annotaionSize - 1; j++) {
+                int nowX = annotations.get(i).getBoundingPoly().getVertices(j).getX();
+                int nowY = annotations.get(i).getBoundingPoly().getVertices(j).getY();
+                getPairList.add(new Pair(nowX, nowY));
+            }
+            //ccw 첫번째 원소 재추가
+            getPairList.add(getPairList.get(0));
+            //(넓이, 인덱스) 순으로 IdxAreaInfo 리스트에 삽입
+            int boxArea = getArea(getPairList);
+            IdxAreaInfo.add(new Pair(boxArea, i));
+        }
+        //내림차순 정렬
+        Collections.sort(IdxAreaInfo, new Ascending());
+        //인덱스 최대 5순위 까지 저장
+        ArrayList<Integer> IdxInfoList = new ArrayList<Integer>();
+        for (int count = 0; count < 5 && count < IdxAreaInfo.size(); count++){
+            IdxInfoList.add(IdxAreaInfo.get(count).y);
+        }
+
+        if (IdxInfoList.size() == 0){
+            //IdxInfoList의 크기가 0일 때
+        }
+        else{
+//            for (int i =0; i < IdxInfoList.size(); i++){
+//                System.out.println(IdxInfoList.get(i));
+//                int tmpIdx = IdxInfoList.get(i);
+//                System.out.println(annotations.get(tmpIdx).getDescription());
+//            }
+            //IdxInfoList의 크기가 0이 아닐 때
+        }
+
+        return IdxInfoList;
+    }
+
+//    public ArrayList<Integer> getLabel(List<EntityAnnotation> annotations){
+//
+//        return
+//    }
 
 }
 
