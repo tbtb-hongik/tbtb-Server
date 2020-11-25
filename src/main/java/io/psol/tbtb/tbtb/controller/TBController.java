@@ -181,8 +181,8 @@ public class TBController {
             }
         }
         ArrayList<String> retInfoList = new ArrayList<>();
-         for (int count = 0; count < 5 && count < retInfoList.size(); count++){
-             retInfoList.add(retInfoList.get(count));
+         for (int count = 0; count < 5 && count < infoList.size(); count++){
+             retInfoList.add(infoList.get(count));
          }
         return retInfoList;
      }
