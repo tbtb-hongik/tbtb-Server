@@ -115,7 +115,14 @@ public class TBController {
 
                 //IdxInfoList의 크기가 0일 때
                 //IdxInfoList의 크기가 0이 아닐 때
-
+                if (IdxInfoList.size() == 0){
+                    System.out.println("Size 0");
+                }
+                else{
+                    for (int i =0; i < IdxInfoList.size(); i++){
+                        System.out.println(IdxInfoList.get(i));
+                    }
+                }
 
             }
         } catch(Exception e) {
