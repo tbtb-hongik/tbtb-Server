@@ -224,18 +224,19 @@ public class TBController {
      public ArrayList<String> translateText(ArrayList<String> textList) {
          ArrayList<String> retReturn = new ArrayList<String>();
          try(TranslationServiceClient client =  TranslationServiceClient.create()) {
-             LocationName locationName = LocationName.of("persuasive-pipe-295805", "global");
+             LocationName parent = LocationName.of("persuasive-pipe-295805", "global");
 
              TranslateTextRequest request =
                      TranslateTextRequest.newBuilder()
-                             .setParent(locationName.toString())
+                             .setParent(parent.toString())
                              .setMimeType("text/plain")
                              .setSourceLanguageCode("en")
                              .setTargetLanguageCode("ko")
                              .addAllContents(textList)
                              .build();
-
+             System.out.println(request);
              TranslateTextResponse response = client.translateText(request);
+             System.out.println(response+"\n"+response.getTranslationsList());
              retReturn = getTranslatedList(response.getTranslationsList());
          } catch (IOException e) {
              e.printStackTrace();
