@@ -30,11 +30,11 @@ public class TBController {
         JSONObject retResult = analysisImage(url);
 
         // DB 저장
-//        TBModel image = new TBModel();
-//        image.setOs(os);
-//        image.setUrl(url);
-//        image.setResult(TTS);
-//        tbService.insert(image);
+        TBModel image = new TBModel();
+        image.setOs(os);
+        image.setUrl(url);
+        image.setResult(retResult.toString());
+        tbService.insert(image);
 
         System.out.println(retResult);
         return retResult.toString();
@@ -49,11 +49,11 @@ public class TBController {
         JSONObject retResult = analysisImage(url);
 
         // DB 저장
-//        TBModel image = new TBModel();
-//        image.setOs(os);
-//        image.setUrl(url);
-//        image.setResult(TTS);
-//        tbService.insert(image);
+        TBModel image = new TBModel();
+        image.setOs(os);
+        image.setUrl(url);
+        image.setResult(retResult.toString());
+        tbService.insert(image);
 
         System.out.println(retResult);
         return retResult.toString();
