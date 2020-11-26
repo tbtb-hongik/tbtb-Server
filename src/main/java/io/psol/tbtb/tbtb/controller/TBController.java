@@ -12,8 +12,7 @@ import com.google.cloud.vision.v1.*;
 
 import java.util.*;
 
-
- @Controller
+@Controller
 public class TBController {
     @Autowired
     TBService tbService;
@@ -56,13 +55,15 @@ public class TBController {
         return retResult.toString();
     }
 
+     /*** 박솔민 ***/
+    // Vision API - 이미지 분석
     public JSONObject analysisImage(String url) {
         JSONObject retResult = null;
         // 이미지 URI
         ImageSource imgUri = ImageSource.newBuilder().setImageUri(url).build();
         Image img = Image.newBuilder().setSource(imgUri).build();
 
-        // Vision API - 이미지 분석 Feature 생성 및 request
+        // Feature 생성 및 request
         Feature detectLabelFeat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
         Feature detectTextFeat = Feature.newBuilder().setType(Feature.Type.DOCUMENT_TEXT_DETECTION).build();
         Feature detectObject = Feature.newBuilder().setType(Feature.Type.OBJECT_LOCALIZATION).build();
@@ -105,6 +106,7 @@ public class TBController {
         return retResult;
     }
 
+    /*** 김준성 ***/
     public int getArea(ArrayList<Pair> list){
         int a = 0;
         int b = 0;
@@ -118,6 +120,7 @@ public class TBController {
         return Math.abs(a-b);
     }
 
+     /*** 김준성 ***/
     // 이미지 속의 의미있는 Text 추출
     public ArrayList<Integer> getText(List<EntityAnnotation> annotations){
         ArrayList<Pair> IdxAreaInfo = new ArrayList<Pair>();
@@ -163,6 +166,7 @@ public class TBController {
         return IdxInfoList;
     }
 
+     /*** 박솔민 ***/
     // 이미지의 의미있는 Label 추출
     public ArrayList<String> getLabel(List<EntityAnnotation> annotations){
         ArrayList<String> getDescriptionList = new ArrayList<String>();
@@ -173,6 +177,7 @@ public class TBController {
         return getDescriptionList;
     }
 
+     /*** 박솔민 ***/
      // 이미지의 의미있는 Object 추출
      public ArrayList<String> getObjectName(List<LocalizedObjectAnnotation> annotations) {
          HashMap<String, Boolean> checkObjNameMap = new HashMap<>();
@@ -194,7 +199,7 @@ public class TBController {
          }
          return retInfoList;
      }
-
+    //박솔민
      public JSONObject StringToJSON(ArrayList<String> ObjList, ArrayList<String> LabelList, String TextString) {
          String[] retLabel = LabelList.toArray(new String[LabelList.size()]);
          String[] retObj = ObjList.toArray(new String[ObjList.size()]);
@@ -209,6 +214,8 @@ public class TBController {
      }
 }
 
+
+/*** 김준성 ***/
 // Object 좌표
 class Pair{
      int xInt, yInt;
