@@ -1,6 +1,7 @@
 package io.psol.tbtb.tbtb.controller;
 
 import com.google.cloud.translate.v3.*;
+import com.google.cloud.translate.v3.LocationName;
 import com.google.cloud.translate.v3.Translation;
 import io.psol.tbtb.tbtb.model.TBModel;
 import io.psol.tbtb.tbtb.service.TBService;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.google.cloud.vision.v1.*;
-import com.google.cloud.translate.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -224,9 +224,13 @@ public class TBController {
      public ArrayList<String> translateText(ArrayList<String> textList) {
          ArrayList<String> retReturn = new ArrayList<String>();
          try(TranslationServiceClient client =  TranslationServiceClient.create()) {
+             LocationName locationName = LocationName.newBuilder().setProject("").setLocation("").build();
+
              TranslateTextRequest request =
                      TranslateTextRequest.newBuilder()
+                             .setParent(locationName.toString())
                              .setMimeType("text/plain")
+                             .setSourceLanguageCode("en")
                              .setTargetLanguageCode("ko")
                              .addAllContents(textList)
                              .build();
