@@ -1,4 +1,4 @@
- package io.psol.tbtb.tbtb.controller;
+package io.psol.tbtb.tbtb.controller;
 
 import io.psol.tbtb.tbtb.model.TBModel;
 import io.psol.tbtb.tbtb.service.TBService;
@@ -187,6 +187,25 @@ public class TBController {
         return retInfoList;
      }
 
+
+     public JSONObject StringToJSON(ArrayList<String> LabelList, ArrayList<String> ObjList, String TextString){
+        String retLabel = "";
+        String retObj = "";
+
+        for (int i = 0; i < LabelList.size() - 1; i++){
+            retLabel +=
+        }
+
+
+
+        String jsonString =
+                 "{\"Label\":" + \"홍길동\","
+                         + "\"Obj\":\"010-0000-0000\","
+                         + "\"Text\":\"2000-01-23\""
+                         + "}";
+
+
+     }
 
 }
 
