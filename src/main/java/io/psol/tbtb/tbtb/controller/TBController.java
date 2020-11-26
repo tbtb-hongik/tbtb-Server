@@ -19,7 +19,7 @@ public class TBController {
     TBService tbService;
 
     @RequestMapping(value = "/android", method = RequestMethod.POST)
-    public @ResponseBody JSONObject Android(@RequestParam("url") String url, @RequestParam("os") String os) {
+    public @ResponseBody String Android(@RequestParam("url") String url, @RequestParam("os") String os) {
         // url 은 받은 데이터
         System.out.println(os + " URL : \n" + url);
         JSONObject retResult = analysisImage(url);
@@ -34,7 +34,7 @@ public class TBController {
 //        image.setResult(TTS);
 //        tbService.insert(image);
         System.out.println(retResult);
-        return retResult;
+        return retResult.toString();
     }
 
     @RequestMapping(value = "/ios", method = RequestMethod.POST)
