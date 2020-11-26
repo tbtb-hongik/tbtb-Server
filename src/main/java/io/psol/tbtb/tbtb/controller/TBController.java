@@ -224,7 +224,7 @@ public class TBController {
      public ArrayList<String> translateText(ArrayList<String> textList) {
          ArrayList<String> retReturn = new ArrayList<String>();
          try(TranslationServiceClient client =  TranslationServiceClient.create()) {
-             LocationName locationName = LocationName.newBuilder().setProject("").setLocation("").build();
+             LocationName locationName = LocationName.of("persuasive-pipe-295805", "global");
 
              TranslateTextRequest request =
                      TranslateTextRequest.newBuilder()
