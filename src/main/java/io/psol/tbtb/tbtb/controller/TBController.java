@@ -1,5 +1,7 @@
 package io.psol.tbtb.tbtb.controller;
 
+import com.google.cloud.translate.v3.*;
+import com.google.cloud.translate.v3.Translation;
 import io.psol.tbtb.tbtb.model.TBModel;
 import io.psol.tbtb.tbtb.service.TBService;
 import lombok.Getter;
@@ -9,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.google.cloud.vision.v1.*;
+import com.google.cloud.translate.*;
 
+import java.io.IOException;
 import java.util.*;
 
 @Controller
@@ -73,8 +77,8 @@ public class TBController {
         requests.add(request);
 
         // Vision API 결과
-        try (ImageAnnotatorClient client = ImageAnnotatorClient.create()) {
-            BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
+        try (ImageAnnotatorClient visionClient = ImageAnnotatorClient.create()) {
+            BatchAnnotateImagesResponse response = visionClient.batchAnnotateImages(requests);
             List<AnnotateImageResponse> responses = response.getResponsesList();
 
             for (AnnotateImageResponse res : responses) {
@@ -83,22 +87,27 @@ public class TBController {
                     return retResult;
                 }
                 // Feature - Object, Label, Text annotation
-                ArrayList<String> ObjInfoList = getObjectName(res.getLocalizedObjectAnnotationsList());
-                ArrayList<String> LabelInfoList = getLabel(res.getLabelAnnotationsList());
-                ArrayList<Integer> TextInfoList = getText(res.getTextAnnotationsList());
+                ArrayList<String> objInfoList = getObjectName(res.getLocalizedObjectAnnotationsList());
+                ArrayList<String> labelInfoList = getLabel(res.getLabelAnnotationsList());
+                ArrayList<Integer> textInfoList = getText(res.getTextAnnotationsList());
                 String TextInfoString = "";
 
 //                System.out.printf("test : %s\n", res.getFullTextAnnotation().getText());
 //                System.out.printf("test2 : %s\n ", res.getLabelAnnotationsList());
-                System.out.printf("test Object : %s\n", ObjInfoList);
-                System.out.printf("test Label : %s\n", LabelInfoList);
+                System.out.printf("test Object : %s\n", objInfoList);
+                System.out.printf("test Label : %s\n", labelInfoList);
 
                 // Text annotation 활용
-                if (LabelInfoList.contains("Text") || LabelInfoList.contains("Font")) {
+                if (labelInfoList.contains("Text") || labelInfoList.contains("Font")) {
                     System.out.printf("test Text: %s\n", res.getFullTextAnnotation().getText());
                     TextInfoString = res.getFullTextAnnotation().getText();
                 }
-                retResult = StringToJSON(ObjInfoList, LabelInfoList, TextInfoString);
+
+                // result Translate.. (한국어로)
+                objInfoList = translateText(objInfoList);
+                labelInfoList = translateText(labelInfoList);
+
+                retResult = StringToJSON(objInfoList, labelInfoList, TextInfoString);
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -200,17 +209,42 @@ public class TBController {
          return retInfoList;
      }
     //박솔민
-     public JSONObject StringToJSON(ArrayList<String> ObjList, ArrayList<String> LabelList, String TextString) {
-         String[] retLabel = LabelList.toArray(new String[LabelList.size()]);
-         String[] retObj = ObjList.toArray(new String[ObjList.size()]);
+     public JSONObject StringToJSON(ArrayList<String> objList, ArrayList<String> labelList, String textString) {
+         String[] retLabel = labelList.toArray(new String[labelList.size()]);
+         String[] retObj = objList.toArray(new String[objList.size()]);
 
          JSONObject json = new JSONObject();
 
          json.put("Object", retObj);
          json.put("Label", retLabel);
-         json.put("Text", TextString);
+         json.put("Text", labelList);
 
          return json;
+     }
+     public ArrayList<String> translateText(ArrayList<String> textList) {
+         ArrayList<String> retReturn = new ArrayList<String>();
+         try(TranslationServiceClient client =  TranslationServiceClient.create()) {
+             TranslateTextRequest request =
+                     TranslateTextRequest.newBuilder()
+                             .setMimeType("text/plain")
+                             .setTargetLanguageCode("ko")
+                             .addAllContents(textList)
+                             .build();
+
+             TranslateTextResponse response = client.translateText(request);
+             retReturn = getTranslatedList(response.getTranslationsList());
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+         return retReturn;
+     }
+     public ArrayList<String> getTranslatedList(List<Translation> translations) {
+         ArrayList<String> retReturn = new ArrayList<String>();
+
+         for (Translation translation : translations) {
+             retReturn.add(translation.getTranslatedText());
+         }
+         return retReturn;
      }
 }
 
