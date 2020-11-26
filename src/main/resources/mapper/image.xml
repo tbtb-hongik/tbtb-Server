@@ -12,8 +12,8 @@ public class TBModel {
 
 <mapper namespace="io.psol.tbtb.tbtb.DAO.TBDao">
     <insert id="insert" parameterType="io.psol.tbtb.tbtb.model.TBModel">
---         insert into image(`os`, `url`, `result`) values(#{os}, #{url}, #{result})
-        insert into image(`os`, `url`, `result`) select #{os}, #{url}, #{result} from dual where not EXISTS (select * from image where url = #{url})
+        insert into image(`os`, `url`, `result`) values(#{os}, #{url}, #{result})
+--         insert into image(`os`, `url`, `result`) select #{os}, #{url}, #{result} from dual where not EXISTS (select * from image where url = #{url})
     </insert>
     <select id="selectAll" resultType="io.psol.tbtb.tbtb.model.TBModel">
 		select * from image
