@@ -90,7 +90,7 @@ public class TBController {
                 ArrayList<String> objInfoList = getObjectName(res.getLocalizedObjectAnnotationsList());
                 ArrayList<String> labelInfoList = getLabel(res.getLabelAnnotationsList());
                 ArrayList<Integer> textInfoList = getText(res.getTextAnnotationsList());
-                String TextInfoString = "";
+                String textInfoString = "";
 
 //                System.out.printf("test : %s\n", res.getFullTextAnnotation().getText());
 //                System.out.printf("test2 : %s\n ", res.getLabelAnnotationsList());
@@ -100,14 +100,14 @@ public class TBController {
                 // Text annotation 활용
                 if (labelInfoList.contains("Text") || labelInfoList.contains("Font")) {
                     System.out.printf("test Text: %s\n", res.getFullTextAnnotation().getText());
-                    TextInfoString = res.getFullTextAnnotation().getText();
+                    textInfoString = res.getFullTextAnnotation().getText();
                 }
 
                 // result Translate.. (한국어로)
                 objInfoList = translateText(objInfoList);
                 labelInfoList = translateText(labelInfoList);
 
-                retResult = StringToJSON(objInfoList, labelInfoList, TextInfoString);
+                retResult = StringToJSON(objInfoList, labelInfoList, textInfoString);
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -217,11 +217,14 @@ public class TBController {
 
          json.put("Object", retObj);
          json.put("Label", retLabel);
-         json.put("Text", labelList);
+         json.put("Text", textString);
 
          return json;
      }
-     public ArrayList<String> translateText(ArrayList<String> textList) {
+
+    /*** 박솔민 ***/
+    // Translation API - 텍스트 번역
+    public ArrayList<String> translateText(ArrayList<String> textList) {
          ArrayList<String> retReturn = new ArrayList<String>();
          try(TranslationServiceClient client =  TranslationServiceClient.create()) {
              LocationName parent = LocationName.of("persuasive-pipe-295805", "global");
@@ -234,15 +237,14 @@ public class TBController {
                              .setTargetLanguageCode("ko")
                              .addAllContents(textList)
                              .build();
-             System.out.println(request);
              TranslateTextResponse response = client.translateText(request);
-             System.out.println(response+"\n"+response.getTranslationsList());
              retReturn = getTranslatedList(response.getTranslationsList());
          } catch (IOException e) {
              e.printStackTrace();
          }
          return retReturn;
      }
+     // 자료형 변환 ( Translation -> String )
      public ArrayList<String> getTranslatedList(List<Translation> translations) {
          ArrayList<String> retReturn = new ArrayList<String>();
 
