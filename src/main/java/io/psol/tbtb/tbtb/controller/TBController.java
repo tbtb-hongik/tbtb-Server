@@ -19,10 +19,10 @@ public class TBController {
     TBService tbService;
 
     @RequestMapping(value = "/android", method = RequestMethod.POST)
-    public @ResponseBody String Android(@RequestParam("url") String url, @RequestParam("os") String os) {
+    public @ResponseBody JSONObject Android(@RequestParam("url") String url, @RequestParam("os") String os) {
         // url 은 받은 데이터
         System.out.println(os + " URL : \n" + url);
-        analysisImage(url);
+        JSONObject retResult = analysisImage(url);
 
         // AI api 처리된 데이터
         String TTS = "";
@@ -34,7 +34,7 @@ public class TBController {
 //        image.setResult(TTS);
 //        tbService.insert(image);
 
-        return TTS;
+        return retResult;
     }
 
     @RequestMapping(value = "/ios", method = RequestMethod.POST)
@@ -55,7 +55,8 @@ public class TBController {
         return TTS;
     }
 
-    public void analysisImage(String url) {
+    public JSONObject analysisImage(String url) {
+        JSONObject retResult = null;
         ImageSource imgUri = ImageSource.newBuilder().setImageUri(url).build();
         Image img = Image.newBuilder().setSource(imgUri).build();
 
@@ -74,7 +75,7 @@ public class TBController {
             for (AnnotateImageResponse res : responses) {
                 if (res.hasError()) {
                     System.out.printf("Error: %s\n", res.getError().getMessage());
-                    return;
+                    return retResult;
                 }
                 //Object
                 ArrayList<String> ObjInfoList = getObjectName(res.getLocalizedObjectAnnotationsList());
@@ -82,20 +83,24 @@ public class TBController {
                 ArrayList<String> LabelInfoList = getLabel(res.getLabelAnnotationsList());
                 //Text annotation
                 ArrayList<Integer> TextInfoList = getText(res.getTextAnnotationsList());
-                
+                String TextInfoString = "";
 //                System.out.printf("test : %s\n", res.getFullTextAnnotation().getText());
 //                System.out.printf("test2 : %s\n ", res.getLabelAnnotationsList());
+
 
                 System.out.printf("test Object : %s\n ", ObjInfoList);
                 System.out.printf("test Label : %s\n", LabelInfoList);
                 if (LabelInfoList.contains("Text") || LabelInfoList.contains("Font")) {
                     // Text annotation 활용
                     System.out.printf("test Text: %s\n", res.getFullTextAnnotation().getText());
+                    TextInfoString = res.getFullTextAnnotation().getText();
                 }
+                retResult = StringToJSON(ObjInfoList, LabelInfoList, TextInfoString);
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
+        return retResult;
     }
 
     public int getArea(ArrayList<Pair> list){
@@ -189,23 +194,17 @@ public class TBController {
      }
 
 
-     public JSONObject StringToJSON(ArrayList<String> LabelList, ArrayList<String> ObjList, String TextString){
-        String retLabel = "";
-        String retObj = "";
+     public JSONObject StringToJSON(ArrayList<String> ObjList, ArrayList<String> LabelList, String TextString){
+        String[] retLabel = LabelList.toArray(new String[LabelList.size()]);
+        String[] retObj = ObjList.toArray(new String[ObjList.size()]);
 
-        for (int i = 0; i < LabelList.size() - 1; i++){
-            retLabel +=
-        }
+         JSONObject json = new JSONObject();
 
+         json.put("Object", retObj);
+         json.put("Label", retLabel);
+         json.put("Text", TextString);
 
-
-        String jsonString =
-                 "{\"Label\":" + \"홍길동\","
-                         + "\"Obj\":\"010-0000-0000\","
-                         + "\"Text\":\"2000-01-23\""
-                         + "}";
-
-
+         return json;
      }
 
 }
