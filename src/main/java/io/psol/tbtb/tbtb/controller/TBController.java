@@ -20,12 +20,11 @@ public class TBController {
 
     @RequestMapping(value = "/android", method = RequestMethod.POST)
     public @ResponseBody String Android(@RequestParam("url") String url, @RequestParam("os") String os) {
-        // url 은 받은 데이터
+        // Client로부터 받은 URL
         System.out.println(os + " URL : \n" + url);
-        JSONObject retResult = analysisImage(url);
 
         // AI api 처리된 데이터
-        String TTS = "";
+        JSONObject retResult = analysisImage(url);
 
         // DB 저장
 //        TBModel image = new TBModel();
@@ -33,17 +32,18 @@ public class TBController {
 //        image.setUrl(url);
 //        image.setResult(TTS);
 //        tbService.insert(image);
+
         System.out.println(retResult);
         return retResult.toString();
     }
 
     @RequestMapping(value = "/ios", method = RequestMethod.POST)
     public @ResponseBody String iOS(@RequestParam("url") String url, @RequestParam("os") String os) {
-        // url 은 받은 데이터
+        // Client로부터 받은 URL
         System.out.println(os + " URL : \n" + url);
 
         // AI api 처리된 데이터
-        String TTS = "iOS";
+        JSONObject retResult = analysisImage(url);
 
         // DB 저장
 //        TBModel image = new TBModel();
@@ -52,14 +52,17 @@ public class TBController {
 //        image.setResult(TTS);
 //        tbService.insert(image);
 
-        return TTS;
+        System.out.println(retResult);
+        return retResult.toString();
     }
 
     public JSONObject analysisImage(String url) {
         JSONObject retResult = null;
+        // 이미지 URI
         ImageSource imgUri = ImageSource.newBuilder().setImageUri(url).build();
         Image img = Image.newBuilder().setSource(imgUri).build();
 
+        // Vision API - 이미지 분석 Feature 생성 및 request
         Feature detectLabelFeat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
         Feature detectTextFeat = Feature.newBuilder().setType(Feature.Type.DOCUMENT_TEXT_DETECTION).build();
         Feature detectObject = Feature.newBuilder().setType(Feature.Type.OBJECT_LOCALIZATION).build();
@@ -68,6 +71,7 @@ public class TBController {
         List<AnnotateImageRequest> requests = new ArrayList<>();
         requests.add(request);
 
+        // Vision API 결과
         try (ImageAnnotatorClient client = ImageAnnotatorClient.create()) {
             BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
             List<AnnotateImageResponse> responses = response.getResponsesList();
@@ -77,21 +81,19 @@ public class TBController {
                     System.out.printf("Error: %s\n", res.getError().getMessage());
                     return retResult;
                 }
-                //Object
+                // Feature - Object, Label, Text annotation
                 ArrayList<String> ObjInfoList = getObjectName(res.getLocalizedObjectAnnotationsList());
-                //Label
                 ArrayList<String> LabelInfoList = getLabel(res.getLabelAnnotationsList());
-                //Text annotation
                 ArrayList<Integer> TextInfoList = getText(res.getTextAnnotationsList());
                 String TextInfoString = "";
+
 //                System.out.printf("test : %s\n", res.getFullTextAnnotation().getText());
 //                System.out.printf("test2 : %s\n ", res.getLabelAnnotationsList());
-
-
                 System.out.printf("test Object : %s\n", ObjInfoList);
                 System.out.printf("test Label : %s\n", LabelInfoList);
+
+                // Text annotation 활용
                 if (LabelInfoList.contains("Text") || LabelInfoList.contains("Font")) {
-                    // Text annotation 활용
                     System.out.printf("test Text: %s\n", res.getFullTextAnnotation().getText());
                     TextInfoString = res.getFullTextAnnotation().getText();
                 }
@@ -116,6 +118,7 @@ public class TBController {
         return Math.abs(a-b);
     }
 
+    // 이미지 속의 의미있는 Text 추출
     public ArrayList<Integer> getText(List<EntityAnnotation> annotations){
         ArrayList<Pair> IdxAreaInfo = new ArrayList<Pair>();
         ArrayList<Pair> getPairList = new ArrayList<Pair>();
@@ -160,43 +163,41 @@ public class TBController {
         return IdxInfoList;
     }
 
-     public ArrayList<String> getLabel(List<EntityAnnotation> annotations){
-         ArrayList<String> getDescriptionList = new ArrayList<String>();
+    // 이미지의 의미있는 Label 추출
+    public ArrayList<String> getLabel(List<EntityAnnotation> annotations){
+        ArrayList<String> getDescriptionList = new ArrayList<String>();
 
-         for (int i = 0; i < 5 && i < annotations.size(); i++) {
-             getDescriptionList.add(annotations.get(i).getDescription());
-         }
-
-         return getDescriptionList;
-     }
-
-
-     public ArrayList<String> getObjectName(List<LocalizedObjectAnnotation> annotations){
-        HashMap<String, Boolean> checkObjNameMap = new HashMap<>();
-        ArrayList<String> infoList = new ArrayList<>();
-        for (int i = 0; i < annotations.size(); i++){
-            String name = annotations.get(i).getName();
-            if (checkObjNameMap.containsKey(name)){
-                //이름이 이미 있을 때
-                //do nothing
-            }
-            else{
-                //이름이 없을 때
-                checkObjNameMap.put(name, true);
-                infoList.add(name);
-            }
+        for (int i = 0; i < 5 && i < annotations.size(); i++) {
+            getDescriptionList.add(annotations.get(i).getDescription());
         }
-        ArrayList<String> retInfoList = new ArrayList<>();
-         for (int count = 0; count < 5 && count < infoList.size(); count++){
+        return getDescriptionList;
+    }
+
+     // 이미지의 의미있는 Object 추출
+     public ArrayList<String> getObjectName(List<LocalizedObjectAnnotation> annotations) {
+         HashMap<String, Boolean> checkObjNameMap = new HashMap<>();
+         ArrayList<String> infoList = new ArrayList<>();
+         for (int i = 0; i < annotations.size(); i++) {
+             String name = annotations.get(i).getName();
+             if (checkObjNameMap.containsKey(name)) {
+                 //이름이 이미 있을 때
+                 //do nothing
+             } else {
+                 //이름이 없을 때
+                 checkObjNameMap.put(name, true);
+                 infoList.add(name);
+             }
+         }
+         ArrayList<String> retInfoList = new ArrayList<>();
+         for (int count = 0; count < 5 && count < infoList.size(); count++) {
              retInfoList.add(infoList.get(count));
          }
-        return retInfoList;
+         return retInfoList;
      }
 
-
-     public JSONObject StringToJSON(ArrayList<String> ObjList, ArrayList<String> LabelList, String TextString){
-        String[] retLabel = LabelList.toArray(new String[LabelList.size()]);
-        String[] retObj = ObjList.toArray(new String[ObjList.size()]);
+     public JSONObject StringToJSON(ArrayList<String> ObjList, ArrayList<String> LabelList, String TextString) {
+         String[] retLabel = LabelList.toArray(new String[LabelList.size()]);
+         String[] retObj = ObjList.toArray(new String[ObjList.size()]);
 
          JSONObject json = new JSONObject();
 
@@ -206,22 +207,18 @@ public class TBController {
 
          return json;
      }
-
 }
 
+// Object 좌표
 class Pair{
      int xInt, yInt;
-
      public Pair(int x, int y){
          this.xInt = x;
          this.yInt = y;
      }
 }
-
-
-class DescendingInt implements Comparator<Pair>{
-     public int compare(Pair a, Pair b)
-     {
-         return b.xInt - a.xInt;
-     }
- }
+class DescendingInt implements Comparator<Pair> {
+    public int compare(Pair a, Pair b) {
+        return b.xInt - a.xInt;
+    }
+}
