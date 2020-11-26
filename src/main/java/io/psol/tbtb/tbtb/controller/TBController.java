@@ -33,7 +33,7 @@ public class TBController {
 //        image.setUrl(url);
 //        image.setResult(TTS);
 //        tbService.insert(image);
-
+        System.out.println(retResult);
         return retResult;
     }
 
@@ -88,7 +88,7 @@ public class TBController {
 //                System.out.printf("test2 : %s\n ", res.getLabelAnnotationsList());
 
 
-                System.out.printf("test Object : %s\n ", ObjInfoList);
+                System.out.printf("test Object : %s\n", ObjInfoList);
                 System.out.printf("test Label : %s\n", LabelInfoList);
                 if (LabelInfoList.contains("Text") || LabelInfoList.contains("Font")) {
                     // Text annotation 활용
